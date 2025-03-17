@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   try {
     // Gọi API
     const { payload } = await authApiRequests.sLogin(body)
-    const { data: { accessToken, refreshToken }} = payload
+    const { accessToken, refreshToken } = payload.data
     // Mình muốn lấy cái thuộc tính exp của token, nhưng hệ thống ko biết decodedAccessToken có thuộc tính exp ko
     // Nên mình ép kiểu nói rằng chắc chắn decodedAccessToken là 1 object có thuộc tính exp để đỡ bị báo lỗi
     const decodedAccessToken = jwt.decode(accessToken) as { exp: number }
@@ -31,6 +31,7 @@ export async function POST(request: Request) {
     })
     return Response.json(payload)
   } catch (error) {
+    console.log('error', error)
     if (error instanceof HttpError) {
       return Response.json(error.payload, { status: error.status })
     } else {
